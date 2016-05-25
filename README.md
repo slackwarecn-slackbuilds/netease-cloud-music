@@ -13,4 +13,6 @@
 
 5.应用音乐指纹技术，通过听取音乐旋律，帮助用户找到歌曲。
 
-dependencies: [qt5](https://slackbuilds.org/repository/14.1/libraries/qt5/)
+dependencies:
+[qt5](https://slackbuilds.org/repository/14.1/libraries/qt5/)
+[libcue](https://slackbuilds.org/repository/14.1/libraries/libcue/)
