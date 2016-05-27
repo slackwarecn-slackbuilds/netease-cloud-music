@@ -16,3 +16,4 @@
 dependencies:
 [qt5](https://slackbuilds.org/repository/14.1/libraries/qt5/)
 [libcue](https://slackbuilds.org/repository/14.1/libraries/libcue/)
+[glib2-2.46.2](http://mirrors.ustc.edu.cn/slackware/slackware64-current/slackware64/l/glib2-2.46.2-x86_64-2.txz)
