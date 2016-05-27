@@ -64,10 +64,16 @@ mkdir glib_new_version
 cd glib_new_version
 tar xvf $CWD/glib2-2.46.2-x86_64-2.txz
 mkdir -p ../usr/lib64/
-cp usr/lib64/libglib-2.0.so.0.4600.2 ../usr/lib64
-cp usr/lib64/libgobject-2.0.so.0.4600.2 ../usr/lib64
+cp usr/lib64/libglib-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
+cp usr/lib64/libgobject-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
 cd ..
 rm -rf glib_new_version
+touch usr/lib/netease-cloud-music/cloud_music.sh
+echo "#!/bin/sh" > usr/lib/netease-cloud-music/cloud_music.sh
+echo "LD_PRELOAD=libglib-2.0.so.0.4600.2:libgobject-2.0.so.0.4600.2 /usr/lib/netease-cloud-music/netease-cloud-music"\
+    >> usr/lib/netease-cloud-music/cloud_music.sh
+chmod +x usr/lib/netease-cloud-music/cloud_music.sh
+rm -f usr/bin/netease-cloud-music
 
 chmod +x usr/lib/netease-cloud-music/libcef.so
 chown -R root:root .

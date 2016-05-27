@@ -13,7 +13,21 @@
 
 5.应用音乐指纹技术，通过听取音乐旋律，帮助用户找到歌曲。
 
-dependencies:
+## 依赖
 [qt5](https://slackbuilds.org/repository/14.1/libraries/qt5/)
 [libcue](https://slackbuilds.org/repository/14.1/libraries/libcue/)
-[glib2-2.46.2](http://mirrors.ustc.edu.cn/slackware/slackware64-current/slackware64/l/glib2-2.46.2-x86_64-2.txz)
+
+## 安装方法
+**不要直接安装glib2-2.46.2-x86_64-2.txz！**
+
+目前仅支持Slackware64-14.1版本
+```
+git clone https://github.com/slackwarecn/netease_cloud_music_slackbuild
+cd netease_cloud_music_slackbuild
+# 下载官方的deb包
+wget http://s1.music.126.net/download/pc/netease-cloud-music_0.9.0-1_amd64.deb
+# 下载所需的新版本 glib2-2.46.2 (PS: 同样使用编译好的包)
+wget http://mirrors.ustc.edu.cn/slackware/slackware64-current/slackware64/l/glib2-2.46.2-x86_64-2.txz
+sudo sh cloud_music.SlackBuild
+sudo installpkg /tmp/cloud_music-0.9.0-x86_64-1_SBo.tgz
+```
