@@ -58,6 +58,18 @@ tar xvf data.tar.xz
 rm -f control.tar.gz
 rm -f data.tar.xz
 rm -f debian-binary
+
+# patch for undefiend symbol: g_type_class_adjust_private_offset
+mkdir glib_new_version
+cd glib_new_version
+tar xvf $CWD/glib2-2.46.2-x86_64-2.txz
+mkdir -p ../usr/lib64/
+cp usr/lib64/libglib-2.0.so.0.4600.2 ../usr/lib64
+cp usr/lib64/libgobject-2.0.so.0.4600.2 ../usr/lib64
+cd ..
+rm -rf glib_new_version
+
+chmod +x usr/lib/netease-cloud-music/libcef.so
 chown -R root:root .
 
 mkdir $PKG/usr/doc/$PRGNAM-$VERSION -p
