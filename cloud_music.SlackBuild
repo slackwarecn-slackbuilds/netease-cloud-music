@@ -53,7 +53,11 @@ cd $TMP
 rm -rf $PRGNAM-$VERSION
 # tar xvf $CWD/$PRGNAM-$VERSION.tar.gz
 cd $PKG
-ar xvf $CWD/netease-cloud-music_0.9.0-1_amd64.deb
+if [ $ARCH = "i486" ]; then
+    ar xvf $CWD/netease-cloudd-music_0.9.0-1_i386.deb
+else
+    ar xvf $CWD/netease-cloud-music_0.9.0-1_amd64.deb
+fi
 tar xvf data.tar.xz
 rm -f control.tar.gz
 rm -f data.tar.xz
@@ -62,10 +66,16 @@ rm -f debian-binary
 # patch for undefiend symbol: g_type_class_adjust_private_offset
 mkdir glib_new_version
 cd glib_new_version
-tar xvf $CWD/glib2-2.46.2-x86_64-2.txz
-mkdir -p ../usr/lib64/
-cp usr/lib64/libglib-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
-cp usr/lib64/libgobject-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
+if [ $ARCH = "i486" ]; then
+    tar xvf $CWD/glib2-2.46.2-i586-2.txt
+    cp usr/lib/libglib-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
+    cp usr/lib/libgobject-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
+else
+    tar xvf $CWD/glib2-2.46.2-x86_64-2.txz
+    mkdir -p ../usr/lib64/
+    cp usr/lib64/libglib-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
+    cp usr/lib64/libgobject-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
+fi
 cd ..
 rm -rf glib_new_version
 touch usr/lib/netease-cloud-music/cloud_music.sh
