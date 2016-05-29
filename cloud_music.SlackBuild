@@ -54,7 +54,7 @@ rm -rf $PRGNAM-$VERSION
 # tar xvf $CWD/$PRGNAM-$VERSION.tar.gz
 cd $PKG
 if [ $ARCH = "i486" ]; then
-    ar xvf $CWD/netease-cloudd-music_0.9.0-1_i386.deb
+    ar xvf $CWD/netease-cloud-music_0.9.0-1_i386.deb
 else
     ar xvf $CWD/netease-cloud-music_0.9.0-1_amd64.deb
 fi
@@ -67,7 +67,7 @@ rm -f debian-binary
 mkdir glib_new_version
 cd glib_new_version
 if [ $ARCH = "i486" ]; then
-    tar xvf $CWD/glib2-2.46.2-i586-2.txt
+    tar xvf $CWD/glib2-2.46.2-i586-2.txz
     cp usr/lib/libglib-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
     cp usr/lib/libgobject-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
 else
