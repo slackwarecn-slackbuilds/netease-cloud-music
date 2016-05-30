@@ -116,11 +116,11 @@ fi
 chmod +x usr/lib/netease-cloud-music/libcef.so
 
 mkdir -p "${PKG}/usr/doc/${PRGNAM}-${VERSION}"
-install -Dm0755 "${CWD}/${PRGNAM}.SlackBuild" "${PKG}/usr/doc/${PRGNAM}-${VERSION}/${PRGNAM}.SlackBuild"
+install -Dm0644 "${CWD}/${PRGNAM}.SlackBuild" "${PKG}/usr/doc/${PRGNAM}-${VERSION}/${PRGNAM}.SlackBuild"
 
 # Copy the slack-desc (and a custom doinst.sh if necessary) into ./install
 mkdir -p "${PKG}/install"
-install -Dm0755 "${CWD}/slack-desc" "${PKG}/install/slack-desc"
+install -Dm0644 "${CWD}/slack-desc" "${PKG}/install/slack-desc"
 install -Dm0755 "${CWD}/doinst.sh" "${PKG}/install/doinst.sh"
 
 # Make the package; be sure to leave it in $OUTPUT
