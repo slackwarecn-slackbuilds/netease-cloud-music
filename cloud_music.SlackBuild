@@ -33,15 +33,18 @@ CWD=$(dirname $(readlink -f $0))
 TMP=${TMP:-/tmp/SBo}
 PKG="${TMP}/package-${PRGNAM}"
 OUTPUT=${OUTPUT:-/tmp}
-SOURCE_URL=''
 SOURCE=''
-SHA256SUMS=('d118d78c62d3d9745fe290dcb5ba0b7412c32f6aa01ae59f8065fd677a208995')
 
 # Automatically determine the architecture we're building on:
 if [ -z "$ARCH" ]; then
   case "$(uname -m)" in
-    i?86) ARCH=i486 ;;
-    arm*) ARCH=arm ;;
+    i?86) ARCH=i486
+        SOURCE="netease-cloud-music_0.9.0-1_i386.deb";;
+    arm*) ARCH=arm
+        echo "Arm is not support"
+        exit -1;;
+    x86_64) ARCH=x86_64
+        SOURCE="netease-cloud-music_0.9.0-1_amd64.deb" ;;
     # Unless $ARCH is already set, use uname -m for all other archs:
        *) ARCH=$(uname -m) ;;
   esac
@@ -51,29 +54,6 @@ set -e
 # If you prefer to do selective error checking with
 #   command || exit 1
 # then that's also acceptable.
-
-cd $CWD
-
-# Get source
-# {
-case $ARCH in
-  *86) SOURCE_URL='http://s1.music.126.net/download/pc/netease-cloud-music_0.9.0-1_i386.deb'
-    break ;;
-  *64) SOURCE_URL='http://s1.music.126.net/download/pc/netease-cloud-music_0.9.0-1_amd64.deb'
-    break ;;
-  *) SOURCE_URL=''
-    break ;;
-esac
-SOURCE=$(basename $SOURCE_URL)
-test -n $SOURCE_URL
-wget -nc $SOURCE_URL
-# 此处避免使用下标，因为不同shell 中数组下标规则不同，有使用其他shell 执行SlackBuild 的可能
-if [[ $(echo ${SHA256SUMS[@]} | awk '{print $1}') != $(sha256sum $SOURCE | awk '{print $1}') ]]
-then
-  echo "Bad file ${SOURCE}" >&2
-  exit 1
-fi
-# }
 
 test -d $PKG && rm -rvf $PKG
 mkdir -p $TMP $PKG $OUTPUT
@@ -119,7 +99,7 @@ if [ -r "${CWD}/${CUSTOM_GLIB2}" ]; then
   rm -f usr/bin/netease-cloud-music
 else
     echo "Can not extract ${CWD}/${CUSTOM_GLIB2}"
-    exit
+    exit -1
 fi
 # }
 
