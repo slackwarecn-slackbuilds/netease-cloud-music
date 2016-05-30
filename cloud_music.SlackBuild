@@ -114,6 +114,7 @@ fi
 # }
 
 chmod +x usr/lib/netease-cloud-music/libcef.so
+rm usr/bin/netease-cloud-music
 
 mkdir -p "${PKG}/usr/doc/${PRGNAM}-${VERSION}"
 install -Dm0644 "${CWD}/${PRGNAM}.SlackBuild" "${PKG}/usr/doc/${PRGNAM}-${VERSION}/${PRGNAM}.SlackBuild"
