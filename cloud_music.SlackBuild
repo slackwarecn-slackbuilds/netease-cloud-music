@@ -2,8 +2,11 @@
 
 # Slackware build script for cloud_music
 
-# Copyright (c) 2016 nnnewb <weak_ptr@163.com>
+# Copyright (c) 2016 Slackware CN Community
 # All rights reserved.
+# 
+# Authors: nnnewb <weak_ptr>, Arondight <mail@arondight.me>,
+#   a1ive (Gen Li, https://github.com/a1ive)
 #
 # Redistribution and use of this script, with or without modification, is
 # permitted provided that the following conditions are met:
