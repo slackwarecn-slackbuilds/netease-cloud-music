@@ -4,7 +4,7 @@
 
 # Copyright (c) 2016 Slackware CN Community
 # All rights reserved.
-# 
+#
 # Authors: nnnewb <weak_ptr>, Arondight <mail@arondight.me>,
 #   a1ive (Gen Li, https://github.com/a1ive)
 #
@@ -91,33 +91,39 @@ rm -f control.tar.gz data.tar.xz debian-binary
 # See https://github.com/slackwarecn/netease_cloud_music_slackbuild/issues/2
 # {
 if [ $ARCH = "i486" ]; then
-  CUSTOM_GLIBC2='glib2-2.46.2-i586-2.txz'
+  CUSTOM_GLIB2='glib2-2.46.2-i586-2.txz'
 else
-  CUSTOM_GLIBC2='glib2-2.46.2-x86_64-2.txz'
+  CUSTOM_GLIB2='glib2-2.46.2-x86_64-2.txz'
 fi
 
-if [[ -r $CUSTOM_GLIBC2 ]]
-then
-  CUSTOM_GLIBC2_DIR='glib_new_version'
+if [ -r "${CWD}/${CUSTOM_GLIB2}" ]; then
+  CUSTOM_GLIB2_DIR='glib_new_version'
 
-  mkdir $CUSTOM_GLIBC2_DIR
-  cd $CUSTOM_GLIBC2_DIR
-  tar -Jxvf "$CWD/${CUSTOM_GLIBC2}"
-  install -Dm0755 usr/lib/libglib-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
-  install -Dm0755 usr/lib/libgobject-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
+  mkdir $CUSTOM_GLIB2_DIR
+  cd $CUSTOM_GLIB2_DIR
+  tar -Jxvf "$CWD/${CUSTOM_GLIB2}"
+  if [ $ARCH = "x86_64" ]; then
+        install -Dm0755 usr/lib64/libglib-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
+        install -Dm0755 usr/lib64/libgobject-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
+  else
+      install -Dm0755 usr/lib/libglib-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
+      install -Dm0755 usr/lib/libgobject-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
+  fi
   cd ..
-  rm -rf $CUSTOM_GLIBC2_DIR
+  rm -rvf $CUSTOM_GLIB2_DIR
   touch usr/lib/netease-cloud-music/cloud_music.sh
   echo "#!/bin/sh" > usr/lib/netease-cloud-music/cloud_music.sh
   echo "LD_PRELOAD=libglib-2.0.so.0.4600.2:libgobject-2.0.so.0.4600.2 /usr/lib/netease-cloud-music/netease-cloud-music"\
       >> usr/lib/netease-cloud-music/cloud_music.sh
   chmod +x usr/lib/netease-cloud-music/cloud_music.sh
   rm -f usr/bin/netease-cloud-music
+else
+    echo "Can not extract ${CWD}/${CUSTOM_GLIB2}"
+    exit
 fi
 # }
 
 chmod +x usr/lib/netease-cloud-music/libcef.so
-rm usr/bin/netease-cloud-music
 
 mkdir -p "${PKG}/usr/doc/${PRGNAM}-${VERSION}"
 install -Dm0644 "${CWD}/${PRGNAM}.SlackBuild" "${PKG}/usr/doc/${PRGNAM}-${VERSION}/${PRGNAM}.SlackBuild"
