@@ -17,20 +17,10 @@
 
 ## 安装方法
 
-**不要直接安装glib2-2.46.2-*-2.txz！**
-
-目前仅支持Slackware-14.1版本
+> 目前仅支持Slackware-14.1版本
 
 ```
 git clone https://github.com/slackwarecn/netease_cloud_music_slackbuild
 cd netease_cloud_music_slackbuild
-# 32 位系统 {
-wget http://mirrors.ustc.edu.cn/slackware/slackware-current/slackware/l/glib2-2.46.2-i586-2.txz
-# }
-# 64 位系统 {
-wget http://mirrors.ustc.edu.cn/slackware/slackware64-current/slackware64/l/glib2-2.46.2-x86_64-2.txz
-# }
-sudo sh cloud_music.SlackBuild
-sudo installpkg /tmp/cloud_music-0.9.0-x86_64-1_SBo.tgz
+sudo sh install.sh
 ```
-
