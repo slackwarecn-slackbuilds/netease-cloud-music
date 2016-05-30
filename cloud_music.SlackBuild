@@ -54,20 +54,19 @@ cd $CWD
 # Get source
 # {
 case $ARCH in
-  *86)
-    SOURCE_URL='http://s1.music.126.net/download/pc/netease-cloud-music_0.9.0-1_i386.deb'
-    ;;
-  *64)
-    SOURCE_URL='http://s1.music.126.net/download/pc/netease-cloud-music_0.9.0-1_amd64.deb'
-    ;;
-  *)
-    SOURCE_URL=''
-    ;;
+  *86) SOURCE_URL='http://s1.music.126.net/download/pc/netease-cloud-music_0.9.0-1_i386.deb' ;;
+  *64) SOURCE_URL='http://s1.music.126.net/download/pc/netease-cloud-music_0.9.0-1_amd64.deb' ;;
+  *) SOURCE_URL='' ;;
 esac
 SOURCE=$(basename $SOURCE_URL)
-test -z $SOURCE_URL && (echo "Unsupport arch ${ARCH}." || exit 1) || wget -nc $SOURCE_URL
+test -z $SOURCE_URL
+wget -nc $SOURCE_URL
 # 此处避免使用下标，因为不同shell 中数组下标规则不同，有使用其他shell 执行SlackBuild 的可能
-[[ $(echo ${SHA256SUMS[@]} | awk '{print $1}') != $(sha256sum $SOURCE | awk '{print $1}') ]] && (echo "Bad file ${SOURCE}" && exit 1)
+if [[ $(echo ${SHA256SUMS[@]} | awk '{print $1}') != $(sha256sum $SOURCE | awk '{print $1}') ]]
+then
+  echo "Bad file ${SOURCE}" >&2
+  exit 1
+fi
 # }
 
 test -d $PKG && rm -rvf $PKG
@@ -94,7 +93,8 @@ if [[ -r $CUSTOM_GLIBC2 ]]
 then
   CUSTOM_GLIBC2_DIR='glib_new_version'
 
-  mkdir $CUSTOM_GLIBC2_DIR && cd $CUSTOM_GLIBC2_DIR || exit 1
+  mkdir $CUSTOM_GLIBC2_DIR
+  cd $CUSTOM_GLIBC2_DIR
   tar -Jxvf "$CWD/${CUSTOM_GLIBC2}"
   install -Dm0755 usr/lib/libglib-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
   install -Dm0755 usr/lib/libgobject-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
