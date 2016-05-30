@@ -1,0 +1,8 @@
+# backup files
+*~
+*.bak
+*.swp
+
+# source files
+*.deb
+
