@@ -22,11 +22,10 @@
 > 目前仅支持Slackware-14.1版本
 
 ```
-sudo rm /tmp/cloud_music-*.tgz
+rm -vf /tmp/cloud_music-*.tgz
 git clone https://github.com/slackwarecn/netease_cloud_music_slackbuild
 cd netease_cloud_music_slackbuild
-./prebuild.sh
-./cloud_music.SlackBuild
+./prebuild.sh && ./cloud_music.SlackBuild
 sudo installpkg /tmp/cloud_music-*.tgz
 ```
 
