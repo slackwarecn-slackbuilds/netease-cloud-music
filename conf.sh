@@ -3,10 +3,15 @@
 # Automatically determine the architecture we're building on:
 if [ -z "$ARCH" ]; then
   case "$(uname -m)" in
-    i?86) ARCH=i486 ;;
-    arm*) ARCH=arm ;;
-    # Unless $ARCH is already set, use uname -m for all other archs:
-       *) ARCH=$(uname -m) ;;
+    i?86)
+      ARCH=i486
+      break ;;
+    arm*)
+      ARCH=arm
+      break ;;
+    *)
+      ARCH=$(uname -m)
+      break ;;
   esac
 fi
 

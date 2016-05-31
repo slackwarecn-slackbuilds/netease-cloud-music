@@ -54,11 +54,7 @@ rm -f control.tar.gz data.tar.xz debian-binary
 
 # Patch for undefiend symbol: g_type_class_adjust_private_offset
 # See https://github.com/slackwarecn/netease_cloud_music_slackbuild/issues/2 {
-if [ $ARCH = "i486" ]; then
-  CUSTOM_GLIB2='glib2-2.46.2-i586-2.txz'
-else
-  CUSTOM_GLIB2='glib2-2.46.2-x86_64-2.txz'
-fi
+CUSTOM_GLIB2=$(basename $GLIB2_URL)
 
 if [ -r "${CWD}/${CUSTOM_GLIB2}" ]; then
   CUSTOM_GLIB2_DIR='glib_new_version'
