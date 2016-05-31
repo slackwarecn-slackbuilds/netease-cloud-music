@@ -26,7 +26,7 @@ sudo rm /tmp/cloud_music-*.tgz
 git clone https://github.com/slackwarecn/netease_cloud_music_slackbuild
 cd netease_cloud_music_slackbuild
 ./prebuild.sh
-sudo sh ./cloud_music.SlackBuild
+./cloud_music.SlackBuild
 sudo installpkg /tmp/cloud_music-*.tgz
 ```
 
