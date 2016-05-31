@@ -1,5 +1,7 @@
 # 网易云音乐 SlackBuild
 
+## 关于
+
 网易云音乐是一款专注于发现与分享的音乐产品，依托专业音乐人、DJ、好友推荐及社交功能，为用户打造全新的音乐生活。
 
 相比市场上其他音乐产品，网易云音乐主打歌单、社交、大牌推荐、音乐指纹技术四个功能，其主要特点包括：
@@ -22,5 +24,8 @@
 ```
 git clone https://github.com/slackwarecn/netease_cloud_music_slackbuild
 cd netease_cloud_music_slackbuild
-sudo sh install.sh
+./prebuild.sh
+./cloud_music.SlackBuild
+su -c 'installpkg /tmp/cloud_music-*.tgz'
 ```
+

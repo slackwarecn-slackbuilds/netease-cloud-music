@@ -5,7 +5,7 @@
 # Copyright (c) 2016 Slackware CN Community
 # All rights reserved.
 #
-# Authors: nnnewb <weak_ptr>, Arondight <mail@arondight.me>,
+# Authors: nnnewb <weak_ptr>, Arondight <shell_way@foxmail.com>,
 #   a1ive (Gen Li, https://github.com/a1ive)
 #
 # Redistribution and use of this script, with or without modification, is
@@ -24,6 +24,7 @@
 #  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+set -e
 
 PRGNAM='cloud_music'
 VERSION=${VERSION:-0.9.0}
@@ -35,25 +36,9 @@ PKG="${TMP}/package-${PRGNAM}"
 OUTPUT=${OUTPUT:-/tmp}
 SOURCE=''
 
-# Automatically determine the architecture we're building on:
-if [ -z "$ARCH" ]; then
-  case "$(uname -m)" in
-    i?86) ARCH=i486
-        SOURCE="netease-cloud-music_0.9.0-1_i386.deb";;
-    arm*) ARCH=arm
-        echo "Arm is not support"
-        exit -1;;
-    x86_64) ARCH=x86_64
-        SOURCE="netease-cloud-music_0.9.0-1_amd64.deb" ;;
-    # Unless $ARCH is already set, use uname -m for all other archs:
-       *) ARCH=$(uname -m) ;;
-  esac
-fi
+source "${CWD}/conf.sh"
 
-set -e
-# If you prefer to do selective error checking with
-#   command || exit 1
-# then that's also acceptable.
+SOURCE=$(basename $SOURCE_URL)
 
 test -d $PKG && rm -rvf $PKG
 mkdir -p $TMP $PKG $OUTPUT
@@ -68,8 +53,7 @@ tar -Jxvf data.tar.xz
 rm -f control.tar.gz data.tar.xz debian-binary
 
 # Patch for undefiend symbol: g_type_class_adjust_private_offset
-# See https://github.com/slackwarecn/netease_cloud_music_slackbuild/issues/2
-# {
+# See https://github.com/slackwarecn/netease_cloud_music_slackbuild/issues/2 {
 if [ $ARCH = "i486" ]; then
   CUSTOM_GLIB2='glib2-2.46.2-i586-2.txz'
 else
@@ -78,24 +62,24 @@ fi
 
 if [ -r "${CWD}/${CUSTOM_GLIB2}" ]; then
   CUSTOM_GLIB2_DIR='glib_new_version'
+  CLOUD_MUSIC_SH='usr/lib/netease-cloud-music/cloud_music.sh'
 
   mkdir $CUSTOM_GLIB2_DIR
   cd $CUSTOM_GLIB2_DIR
   tar -Jxvf "$CWD/${CUSTOM_GLIB2}"
   if [ $ARCH = "x86_64" ]; then
-        install -Dm0755 usr/lib64/libglib-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
-        install -Dm0755 usr/lib64/libgobject-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
+    install -Dm0755 usr/lib64/libglib-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
+    install -Dm0755 usr/lib64/libgobject-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
   else
-      install -Dm0755 usr/lib/libglib-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
-      install -Dm0755 usr/lib/libgobject-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
+    install -Dm0755 usr/lib/libglib-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
+    install -Dm0755 usr/lib/libgobject-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
   fi
   cd ..
   rm -rvf $CUSTOM_GLIB2_DIR
-  touch usr/lib/netease-cloud-music/cloud_music.sh
-  echo "#!/bin/sh" > usr/lib/netease-cloud-music/cloud_music.sh
+  echo "#!/bin/sh" > $CLOUD_MUSIC_SH
   echo "LD_PRELOAD=libglib-2.0.so.0.4600.2:libgobject-2.0.so.0.4600.2 /usr/lib/netease-cloud-music/netease-cloud-music"\
-      >> usr/lib/netease-cloud-music/cloud_music.sh
-  chmod +x usr/lib/netease-cloud-music/cloud_music.sh
+      >> $CLOUD_MUSIC_SH
+  chmod +x $CLOUD_MUSIC_SH
   rm -f usr/bin/netease-cloud-music
 else
     echo "Can not extract ${CWD}/${CUSTOM_GLIB2}"
@@ -119,3 +103,4 @@ install -Dm0755 "${CWD}/doinst.sh" "${PKG}/install/doinst.sh"
 # the makepkg command below -- see makepkg(8) for details
 cd $PKG
 /sbin/makepkg -l y -c n "${OUTPUT}/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-tgz}"
+
