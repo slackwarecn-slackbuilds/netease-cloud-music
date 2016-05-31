@@ -3,6 +3,8 @@
 *.bak
 *.swp
 
-# source files
+# tarball
 *.deb
-glib2-*.txz
+*.txz
+*.tgz
+
