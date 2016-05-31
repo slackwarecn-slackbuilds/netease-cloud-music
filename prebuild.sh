@@ -12,16 +12,16 @@ SHA256SUMS=(
 
 source "${CWD}/conf.sh"
 
-echo -ne "Prebuild...\t"
+echo -ne "Prebuilding...\t"
 
 SOURCE=$(basename $SOURCE_URL)
 test -n $SOURCE_URL
-wget -nc $SOURCE_URL 2>/dev/null
+wget -N $SOURCE_URL 2>/dev/null
 test $(echo ${SHA256SUMS[@]} | awk '{print $1}') == $(sha256sum $SOURCE | awk '{print $1}')
 
 GLIB2=$(basename $GLIB2_URL)
 test -n $GLIB2_URL
-wget -nc $GLIB2_URL 2>/dev/null
+wget -N $GLIB2_URL 2>/dev/null
 if echo $GLIB2_URL | grep -o 'x86_64' >/dev/null 2>&1; then
   test $(echo ${SHA256SUMS[@]} | awk '{print $3}') == $(sha256sum $GLIB2 | awk '{print $1}')
 else
