@@ -17,7 +17,7 @@
 1. [qt5](https://slackbuilds.org/repository/14.1/libraries/qt5/)
 + [libcue](https://slackbuilds.org/repository/14.1/libraries/libcue/)
 
-## 安装方法
+## 安装
 
 > 目前仅支持Slackware-14.1版本
 
@@ -25,7 +25,7 @@
 rm -vf /tmp/cloud_music-*.tgz
 git clone https://github.com/slackwarecn/netease_cloud_music_slackbuild
 cd netease_cloud_music_slackbuild
-./prebuild.sh && ./cloud_music.SlackBuild
-sudo installpkg /tmp/cloud_music-*.tgz
+PREBUILD=1 ./cloud_music.SlackBuild
+su -c 'installpkg /tmp/cloud_music-*.tgz'
 ```
 
