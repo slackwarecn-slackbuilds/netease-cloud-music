@@ -38,6 +38,8 @@ TMP=${TMP:-/tmp/SBo}
 PKG="${TMP}/package-${PRGNAM}"
 OUTPUT=${OUTPUT:-/tmp}
 SOURCE=''
+SLACKVER_FILE='/etc/slackware-version'
+SLACKVER=$(sed -n 's/slackware \([0-9]\+\.[0-9]\+\)$/\1/ip' $SLACKVER_FILE)
 SHA256SUMS=(
   '841f4f88f7c213689e9ebf27bb21ebf8aded10ab5f4d3fd9a173b417d687abd4'  # netease-cloud-music_0.9.0-1_amd64.deb
   'f243c3366e78b68229820747383897ba5781a7579148f2c83eda095c96209de4'  # netease-cloud-music_0.9.0-2_i386.deb
@@ -69,8 +71,10 @@ case $ARCH in
     ;;
 esac
 
-# TODO
-# 此处判断版本>13.37 则清空$GLIB2_URL
+if [ 'true' == $(awk -v ver=$SLACKVER \
+                'BEGIN { print (ver > 14.1) ? "true" : "false" }') ]; then
+  GLIB2_URL=''
+fi
 
 SOURCE=$(basename $SOURCE_URL)
 GLIB2=$(basename $GLIB2_URL)
