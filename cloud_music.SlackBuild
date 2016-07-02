@@ -69,7 +69,11 @@ case $ARCH in
     ;;
 esac
 
+# TODO
+# 此处判断版本>13.37 则清空$GLIB2_URL
+
 SOURCE=$(basename $SOURCE_URL)
+GLIB2=$(basename $GLIB2_URL)
 
 if [ 1 -eq $PREBUILD ]; then
   test -n $SOURCE_URL
@@ -80,13 +84,13 @@ if [ 1 -eq $PREBUILD ]; then
     test ${SHA256SUMS[1]} == $(sha256sum $SOURCE | awk '{print $1}')
   fi
 
-  GLIB2=$(basename $GLIB2_URL)
-  test -n $GLIB2_URL
-  wget -N $GLIB2_URL
-  if echo $GLIB2_URL | grep -o 'x86_64' >/dev/null 2>&1; then
-    test ${SHA256SUMS[2]} == $(sha256sum $GLIB2 | awk '{print $1}')
-  else
-    test ${SHA256SUMS[3]} == $(sha256sum $GLIB2 | awk '{print $1}')
+  if [ -n $GLIB2_URL ]; then
+    wget -N $GLIB2_URL
+    if echo $GLIB2_URL | grep -o 'x86_64' >/dev/null 2>&1; then
+      test ${SHA256SUMS[2]} == $(sha256sum $GLIB2 | awk '{print $1}')
+    else
+      test ${SHA256SUMS[3]} == $(sha256sum $GLIB2 | awk '{print $1}')
+    fi
   fi
 fi
 
@@ -127,19 +131,14 @@ if [ -r "${CWD}/${CUSTOM_GLIB2}" ]; then
       >> $CLOUD_MUSIC_SH
   chmod +x $CLOUD_MUSIC_SH
   rm -f usr/bin/netease-cloud-music
-else
-    echo "Can not extract ${CWD}/${CUSTOM_GLIB2}"
-    exit -1
 fi
 # }
 
 chmod +x usr/lib/netease-cloud-music/libcef.so
 
 mkdir -p "${PKG}/usr/doc/${PRGNAM}-${VERSION}"
-install -Dm0644 "${CWD}/${PRGNAM}.SlackBuild" "${PKG}/usr/doc/${PRGNAM}-${VERSION}/${PRGNAM}.SlackBuild"
-
-# Copy the slack-desc (and a custom doinst.sh if necessary) into ./install
 mkdir -p "${PKG}/install"
+install -Dm0644 "${CWD}/${PRGNAM}.SlackBuild" "${PKG}/usr/doc/${PRGNAM}-${VERSION}/${PRGNAM}.SlackBuild"
 install -Dm0644 "${CWD}/slack-desc" "${PKG}/install/slack-desc"
 install -Dm0755 "${CWD}/doinst.sh" "${PKG}/install/doinst.sh"
 
