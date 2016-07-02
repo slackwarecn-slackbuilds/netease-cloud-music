@@ -1,12 +1,13 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Slackware build script for cloud_music
 
 # Copyright (c) 2016 Slackware CN Community
 # All rights reserved.
 #
-# Authors: nnnewb <weak_ptr>, Arondight <shell_way@foxmail.com>,
-#   a1ive (Gen Li, https://github.com/a1ive)
+# Authors:  nnnewb <weak_ptr>,
+#           Arondight <shell_way@foxmail.com>,
+#           a1ive (Gen Li, https://github.com/a1ive)
 #
 # Redistribution and use of this script, with or without modification, is
 # permitted provided that the following conditions are met:
@@ -26,6 +27,8 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 set -e
 
+PREBUILD=${PREBUILD:-0}
+
 PRGNAM='cloud_music'
 VERSION=${VERSION:-0.9.0}
 BUILD=${BUILD:-1}
@@ -35,16 +38,63 @@ TMP=${TMP:-/tmp/SBo}
 PKG="${TMP}/package-${PRGNAM}"
 OUTPUT=${OUTPUT:-/tmp}
 SOURCE=''
+SHA256SUMS=(
+  '841f4f88f7c213689e9ebf27bb21ebf8aded10ab5f4d3fd9a173b417d687abd4'  # netease-cloud-music_0.9.0-1_amd64.deb
+  'f243c3366e78b68229820747383897ba5781a7579148f2c83eda095c96209de4'  # netease-cloud-music_0.9.0-2_i386.deb
+  'efb94f25a3ef36633d8ee19c0842959ea1a0802bd257f514088d850306280d9b'  # glib2-2.46.2-x86_64-2.txz
+  'f838e792769957fa99fb3cbf3a852669246a80ece1975abeca338c010e28dc6c'  # glib2-2.46.2-i586-2.txz
+)
 
-source "${CWD}/conf.sh"
+# Automatically determine the architecture we're building on:
+if [ -z "$ARCH" ]; then
+  case "$(uname -m)" in
+    i?86) ARCH=i486 ;;
+    arm*) ARCH=arm ;;
+    *)    ARCH=$(uname -m) ;;
+  esac
+fi
+
+case $ARCH in
+  *86)
+    SOURCE_URL='http://s1.music.126.net/download/pc/netease-cloud-music_0.9.0-2_i386.deb'
+    GLIB2_URL='http://mirrors.ustc.edu.cn/slackware/slackware-current/slackware/l/glib2-2.46.2-i586-2.txz'
+    ;;
+  *64)
+    SOURCE_URL='http://s1.music.126.net/download/pc/netease-cloud-music_0.9.0-2_amd64.deb'
+    GLIB2_URL='http://mirrors.ustc.edu.cn/slackware/slackware64-current/slackware64/l/glib2-2.46.2-x86_64-2.txz'
+    ;;
+  *)
+    SOURCE_URL=''
+    GLIB2_URL=''
+    ;;
+esac
 
 SOURCE=$(basename $SOURCE_URL)
 
-test -d $PKG && rm -rvf $PKG
+if [ 1 -eq $PREBUILD ]; then
+  test -n $SOURCE_URL
+  wget -N $SOURCE_URL
+  if echo $SOURCE_URL | grep -o 'amd64' >/dev/null 2>&1; then
+    test ${SHA256SUMS[0]} == $(sha256sum $SOURCE | awk '{print $1}')
+  else
+    test ${SHA256SUMS[1]} == $(sha256sum $SOURCE | awk '{print $1}')
+  fi
+
+  GLIB2=$(basename $GLIB2_URL)
+  test -n $GLIB2_URL
+  wget -N $GLIB2_URL
+  if echo $GLIB2_URL | grep -o 'x86_64' >/dev/null 2>&1; then
+    test ${SHA256SUMS[2]} == $(sha256sum $GLIB2 | awk '{print $1}')
+  else
+    test ${SHA256SUMS[3]} == $(sha256sum $GLIB2 | awk '{print $1}')
+  fi
+fi
+
+test -d $PKG && rm -rvf $PKG || :
 mkdir -p $TMP $PKG $OUTPUT
 
 cd $TMP
-test -d "${PRGNAM}-${VERSION}" && rm -rvf "${PRGNAM}-${VERSION}"
+test -d "${PRGNAM}-${VERSION}" && rm -rvf "${PRGNAM}-${VERSION}" || :
 # tar -zxvf $CWD/$PRGNAM-$VERSION.tar.gz
 
 cd $PKG
