@@ -48,7 +48,8 @@ SHA256SUMS=(
 )
 
 # Automatically determine the architecture we're building on:
-if [ -z "$ARCH" ]; then
+if [[ -z "$ARCH" ]]
+then
   case "$(uname -m)" in
     i?86) ARCH=i486 ;;
     arm*) ARCH=arm ;;
@@ -71,15 +72,16 @@ case $ARCH in
     ;;
 esac
 
-if [ 'true' == $(awk -v ver=$SLACKVER \
-                'BEGIN { print (ver > 14.1) ? "true" : "false" }') ]; then
+if [[ 'true' == $(awk -v ver=$SLACKVER \
+                'BEGIN { print (ver > 14.1) ? "true" : "false" }') ]]
+then
   GLIB2_URL=''
 fi
 
 SOURCE=$(basename $SOURCE_URL)
-GLIB2=$(basename $GLIB2_URL)
 
-if [ 1 -eq $PREBUILD ]; then
+if [[ 1 -eq $PREBUILD ]]
+then
   test -n $SOURCE_URL
   wget -N $SOURCE_URL
   if echo $SOURCE_URL | grep -o 'amd64' >/dev/null 2>&1; then
@@ -88,7 +90,9 @@ if [ 1 -eq $PREBUILD ]; then
     test ${SHA256SUMS[1]} == $(sha256sum $SOURCE | awk '{print $1}')
   fi
 
-  if [ -n $GLIB2_URL ]; then
+  if [[ -n $GLIB2_URL ]]
+  then
+    GLIB2=$(basename $GLIB2_URL)
     wget -N $GLIB2_URL
     if echo $GLIB2_URL | grep -o 'x86_64' >/dev/null 2>&1; then
       test ${SHA256SUMS[2]} == $(sha256sum $GLIB2 | awk '{print $1}')
@@ -112,29 +116,34 @@ rm -f control.tar.gz data.tar.xz debian-binary
 
 # Patch for undefiend symbol: g_type_class_adjust_private_offset
 # See https://github.com/slackwarecn/netease_cloud_music_slackbuild/issues/2 {
-CUSTOM_GLIB2=$(basename $GLIB2_URL)
+if [[ -n $GLIB2_URL ]]
+then
+  CUSTOM_GLIB2=$(basename $GLIB2_URL)
 
-if [ -r "${CWD}/${CUSTOM_GLIB2}" ]; then
-  CUSTOM_GLIB2_DIR='glib_new_version'
-  CLOUD_MUSIC_SH='usr/lib/netease-cloud-music/cloud_music.sh'
+  if [[ -r "${CWD}/${CUSTOM_GLIB2}" ]]
+  then
+    CUSTOM_GLIB2_DIR='glib_new_version'
+    CLOUD_MUSIC_SH='usr/lib/netease-cloud-music/cloud_music.sh'
 
-  mkdir $CUSTOM_GLIB2_DIR
-  cd $CUSTOM_GLIB2_DIR
-  tar -Jxvf "$CWD/${CUSTOM_GLIB2}"
-  if [ $ARCH = "x86_64" ]; then
-    install -Dm0755 usr/lib64/libglib-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
-    install -Dm0755 usr/lib64/libgobject-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
-  else
-    install -Dm0755 usr/lib/libglib-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
-    install -Dm0755 usr/lib/libgobject-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
+    mkdir $CUSTOM_GLIB2_DIR
+    cd $CUSTOM_GLIB2_DIR
+    tar -Jxvf "$CWD/${CUSTOM_GLIB2}"
+    if [[ $ARCH = "x86_64" ]]
+    then
+      install -Dm0755 usr/lib64/libglib-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
+      install -Dm0755 usr/lib64/libgobject-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
+    else
+      install -Dm0755 usr/lib/libglib-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
+      install -Dm0755 usr/lib/libgobject-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
+    fi
+    cd ..
+    rm -rvf $CUSTOM_GLIB2_DIR
+    echo "#!/bin/sh" > $CLOUD_MUSIC_SH
+    echo "LD_PRELOAD=libglib-2.0.so.0.4600.2:libgobject-2.0.so.0.4600.2 /usr/lib/netease-cloud-music/netease-cloud-music"\
+        >> $CLOUD_MUSIC_SH
+    chmod +x $CLOUD_MUSIC_SH
+    rm -f usr/bin/netease-cloud-music
   fi
-  cd ..
-  rm -rvf $CUSTOM_GLIB2_DIR
-  echo "#!/bin/sh" > $CLOUD_MUSIC_SH
-  echo "LD_PRELOAD=libglib-2.0.so.0.4600.2:libgobject-2.0.so.0.4600.2 /usr/lib/netease-cloud-music/netease-cloud-music"\
-      >> $CLOUD_MUSIC_SH
-  chmod +x $CLOUD_MUSIC_SH
-  rm -f usr/bin/netease-cloud-music
 fi
 # }
 
