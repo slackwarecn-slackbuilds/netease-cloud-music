@@ -122,27 +122,35 @@ then
 
   if [[ -r "${CWD}/${CUSTOM_GLIB2}" ]]
   then
-    CUSTOM_GLIB2_DIR='glib_new_version'
-    CLOUD_MUSIC_SH='usr/lib/netease-cloud-music/cloud_music.sh'
+    CUSTOM_GLIB2_DIR='custom_glib2'
+    CLOUD_MUSIC_SH='./usr/lib/netease-cloud-music/cloud_music.sh'
+    LIBGLIB='libglib-2.0.so.0.4600.2'
+    LIBGOBJECT='libgobject-2.0.so.0.4600.2'
+    CLOUD_MUSIC_BUILD_LIBDIR='./usr/lib/netease-cloud-music'
+    CLOUD_MUSIC_BUILD_BIN='usr/bin/netease-cloud-music'
 
     mkdir $CUSTOM_GLIB2_DIR
     cd $CUSTOM_GLIB2_DIR
+
     tar -Jxvf "$CWD/${CUSTOM_GLIB2}"
     if [[ $ARCH = "x86_64" ]]
     then
-      install -Dm0755 usr/lib64/libglib-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
-      install -Dm0755 usr/lib64/libgobject-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
+      install -Dm0755 "./usr/lib64/${LIBGLIB}" "../${CLOUD_MUSIC_BUILD_LIBDIR}"
+      install -Dm0755 "./usr/lib64/${LIBGOBJECT}" "../${CLOUD_MUSIC_BUILD_LIBDIR}"
     else
-      install -Dm0755 usr/lib/libglib-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
-      install -Dm0755 usr/lib/libgobject-2.0.so.0.4600.2 ../usr/lib/netease-cloud-music
+      install -Dm0755 "./usr/lib/${LIBGLIB}" "../${CLOUD_MUSIC_BUILD_LIBDIR}"
+      install -Dm0755 "./usr/lib/${LIBGOBJECT}" "../${CLOUD_MUSIC_BUILD_LIBDIR}"
     fi
+
     cd ..
     rm -rvf $CUSTOM_GLIB2_DIR
-    echo "#!/bin/sh" > $CLOUD_MUSIC_SH
-    echo "LD_PRELOAD=libglib-2.0.so.0.4600.2:libgobject-2.0.so.0.4600.2 /usr/lib/netease-cloud-music/netease-cloud-music"\
-        >> $CLOUD_MUSIC_SH
+
+    ( echo "#!/usr/bin/env bash"
+      echo "LD_PRELOAD=${LIBGLIB}:${LIBGOBJECT} /usr/lib/netease-cloud-music/netease-cloud-music"
+    ) >> $CLOUD_MUSIC_SH
+
     chmod +x $CLOUD_MUSIC_SH
-    rm -f usr/bin/netease-cloud-music
+    rm -vf $CLOUD_MUSIC_BUILD_BIN
   fi
 fi
 # }
