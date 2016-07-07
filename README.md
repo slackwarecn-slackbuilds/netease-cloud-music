@@ -23,8 +23,8 @@
 > 目前仅支持Slackware-14.1版本
 
 ```
-git clone https://github.com/slackwarecn/netease_cloud_music_slackbuild
-cd netease_cloud_music_slackbuild
+git clone https://github.com/slackwarecn/netease-cloud-music
+cd netease-cloud-music
 PREBUILD=yes ./cloud_music.SlackBuild
 su -c 'installpkg /tmp/cloud_music-1.0.0-x86_64-1_SBo.txz'
 ```

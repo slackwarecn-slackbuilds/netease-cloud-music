@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Slackware build script for cloud_music
+# Slackware build script for netease-cloud-music
 
 # Copyright (c) 2016 Slackware CN Community
 # All rights reserved.
@@ -29,7 +29,7 @@ set -e
 
 PREBUILD=${PREBUILD:-no}
 PKGTYPE=${PKGTYPE:-txz}
-PRGNAM='cloud_music'
+PRGNAM='netease-cloud-music'
 VERSION=${VERSION:-1.0.0}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_SBo}
@@ -116,8 +116,6 @@ ar -xvf "${CWD}/${SOURCE}"
 tar -Jxvf data.tar.xz
 rm -vf control.tar.gz data.tar.xz debian-binary
 
-# Patch for undefiend symbol: g_type_class_adjust_private_offset
-# See https://github.com/slackwarecn/netease_cloud_music_slackbuild/issues/2 {
 if [[ -n $GLIB2_URL ]]
 then
   CUSTOM_GLIB2=$(basename $GLIB2_URL)
@@ -155,7 +153,6 @@ then
     rm -vf $CLOUD_MUSIC_BUILD_BIN
   fi
 fi
-# }
 
 chmod -v +x usr/lib/netease-cloud-music/libcef.so
 
