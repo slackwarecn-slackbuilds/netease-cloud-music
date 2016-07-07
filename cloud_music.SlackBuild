@@ -27,10 +27,10 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 set -e
 
-PREBUILD=${PREBUILD:-0}
-
+PREBUILD=${PREBUILD:-no}
+PKGTYPE=${PKGTYPE:-txz}
 PRGNAM='cloud_music'
-VERSION=${VERSION:-0.9.0}
+VERSION=${VERSION:-1.0.0}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_SBo}
 CWD=$(dirname $(readlink -f $0))
@@ -41,8 +41,8 @@ SOURCE=''
 SLACKVER_FILE='/etc/slackware-version'
 SLACKVER=$(sed -n 's/slackware \([0-9]\+\.[0-9]\+\)$/\1/ip' $SLACKVER_FILE)
 SHA256SUMS=(
-  '841f4f88f7c213689e9ebf27bb21ebf8aded10ab5f4d3fd9a173b417d687abd4'  # netease-cloud-music_0.9.0-1_amd64.deb
-  'f243c3366e78b68229820747383897ba5781a7579148f2c83eda095c96209de4'  # netease-cloud-music_0.9.0-2_i386.deb
+  '304543102811c52f77ad99219862368356e69d2d43748d94817a206791133c86'  #netease-cloud-music_1.0.0_amd64_ubuntu16.04.deb
+  '79c2108c11d59ace8321727bc1876ac5ba0f7090b0c3deb4cc4251510a13577d'  #netease-cloud-music_1.0.0_i386_ubuntu16.04.deb
   'efb94f25a3ef36633d8ee19c0842959ea1a0802bd257f514088d850306280d9b'  # glib2-2.46.2-x86_64-2.txz
   'f838e792769957fa99fb3cbf3a852669246a80ece1975abeca338c010e28dc6c'  # glib2-2.46.2-i586-2.txz
 )
@@ -59,11 +59,11 @@ fi
 
 case $ARCH in
   *86)
-    SOURCE_URL='http://s1.music.126.net/download/pc/netease-cloud-music_0.9.0-2_i386.deb'
+    SOURCE_URL="http://s1.music.126.net/download/pc/netease-cloud-music_${VERSION}_i386_ubuntu16.04.deb"
     GLIB2_URL='http://mirrors.slackware.com/slackware/slackware-14.2/slackware/l/glib2-2.46.2-i586-2.txz'
     ;;
   *64)
-    SOURCE_URL='http://s1.music.126.net/download/pc/netease-cloud-music_0.9.0-2_amd64.deb'
+    SOURCE_URL="http://s1.music.126.net/download/pc/netease-cloud-music_${VERSION}_amd64_ubuntu16.04.deb"
     GLIB2_URL='http://mirrors.slackware.com/slackware/slackware64-14.2/slackware64/l/glib2-2.46.2-x86_64-2.txz'
     ;;
   *)
@@ -80,7 +80,7 @@ fi
 
 SOURCE=$(basename $SOURCE_URL)
 
-if [[ 1 -eq $PREBUILD ]]
+if [[ 'yes' == $PREBUILD ]]
 then
   test -n $SOURCE_URL
   wget -N $SOURCE_URL

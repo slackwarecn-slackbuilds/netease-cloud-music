@@ -25,8 +25,7 @@
 ```
 git clone https://github.com/slackwarecn/netease_cloud_music_slackbuild
 cd netease_cloud_music_slackbuild
-rm -vf /tmp/cloud_music-*.tgz
-PREBUILD=1 ./cloud_music.SlackBuild
-su -c 'installpkg /tmp/cloud_music-*.tgz'
+PREBUILD=yes ./cloud_music.SlackBuild
+su -c 'installpkg /tmp/cloud_music-1.0.0-x86_64-1_SBo.txz'
 ```
 
