@@ -84,7 +84,8 @@ if [[ 1 -eq $PREBUILD ]]
 then
   test -n $SOURCE_URL
   wget -N $SOURCE_URL
-  if echo $SOURCE_URL | grep -o 'amd64' >/dev/null 2>&1; then
+  if echo $SOURCE_URL | grep -o 'amd64' >/dev/null 2>&1
+  then
     test ${SHA256SUMS[0]} == $(sha256sum $SOURCE | awk '{print $1}')
   else
     test ${SHA256SUMS[1]} == $(sha256sum $SOURCE | awk '{print $1}')
@@ -94,7 +95,8 @@ then
   then
     GLIB2=$(basename $GLIB2_URL)
     wget -N $GLIB2_URL
-    if echo $GLIB2_URL | grep -o 'x86_64' >/dev/null 2>&1; then
+    if echo $GLIB2_URL | grep -o 'x86_64' >/dev/null 2>&1
+    then
       test ${SHA256SUMS[2]} == $(sha256sum $GLIB2 | awk '{print $1}')
     else
       test ${SHA256SUMS[3]} == $(sha256sum $GLIB2 | awk '{print $1}')
@@ -103,7 +105,7 @@ then
 fi
 
 test -d $PKG && rm -rvf $PKG || :
-mkdir -p $TMP $PKG $OUTPUT
+mkdir -pv $TMP $PKG $OUTPUT
 
 cd $TMP
 test -d "${PRGNAM}-${VERSION}" && rm -rvf "${PRGNAM}-${VERSION}" || :
@@ -112,7 +114,7 @@ test -d "${PRGNAM}-${VERSION}" && rm -rvf "${PRGNAM}-${VERSION}" || :
 cd $PKG
 ar -xvf "${CWD}/${SOURCE}"
 tar -Jxvf data.tar.xz
-rm -f control.tar.gz data.tar.xz debian-binary
+rm -vf control.tar.gz data.tar.xz debian-binary
 
 # Patch for undefiend symbol: g_type_class_adjust_private_offset
 # See https://github.com/slackwarecn/netease_cloud_music_slackbuild/issues/2 {
@@ -129,17 +131,17 @@ then
     CLOUD_MUSIC_BUILD_LIBDIR='./usr/lib/netease-cloud-music'
     CLOUD_MUSIC_BUILD_BIN='usr/bin/netease-cloud-music'
 
-    mkdir $CUSTOM_GLIB2_DIR
+    mkdir -pv $CUSTOM_GLIB2_DIR
     cd $CUSTOM_GLIB2_DIR
 
     tar -Jxvf "$CWD/${CUSTOM_GLIB2}"
     if [[ $ARCH = "x86_64" ]]
     then
-      install -Dm0755 "./usr/lib64/${LIBGLIB}" "../${CLOUD_MUSIC_BUILD_LIBDIR}"
-      install -Dm0755 "./usr/lib64/${LIBGOBJECT}" "../${CLOUD_MUSIC_BUILD_LIBDIR}"
+      install -Dv -m 0755 "./usr/lib64/${LIBGLIB}" "../${CLOUD_MUSIC_BUILD_LIBDIR}"
+      install -Dv -m 0755 "./usr/lib64/${LIBGOBJECT}" "../${CLOUD_MUSIC_BUILD_LIBDIR}"
     else
-      install -Dm0755 "./usr/lib/${LIBGLIB}" "../${CLOUD_MUSIC_BUILD_LIBDIR}"
-      install -Dm0755 "./usr/lib/${LIBGOBJECT}" "../${CLOUD_MUSIC_BUILD_LIBDIR}"
+      install -Dv -m 0755 "./usr/lib/${LIBGLIB}" "../${CLOUD_MUSIC_BUILD_LIBDIR}"
+      install -Dv -m 0755 "./usr/lib/${LIBGOBJECT}" "../${CLOUD_MUSIC_BUILD_LIBDIR}"
     fi
 
     cd ..
@@ -149,19 +151,19 @@ then
       echo "LD_PRELOAD=${LIBGLIB}:${LIBGOBJECT} /usr/lib/netease-cloud-music/netease-cloud-music"
     ) >> $CLOUD_MUSIC_SH
 
-    chmod +x $CLOUD_MUSIC_SH
+    chmod -v +x $CLOUD_MUSIC_SH
     rm -vf $CLOUD_MUSIC_BUILD_BIN
   fi
 fi
 # }
 
-chmod +x usr/lib/netease-cloud-music/libcef.so
+chmod -v +x usr/lib/netease-cloud-music/libcef.so
 
-mkdir -p "${PKG}/usr/doc/${PRGNAM}-${VERSION}"
-mkdir -p "${PKG}/install"
-install -Dm0644 "${CWD}/${PRGNAM}.SlackBuild" "${PKG}/usr/doc/${PRGNAM}-${VERSION}/${PRGNAM}.SlackBuild"
-install -Dm0644 "${CWD}/slack-desc" "${PKG}/install/slack-desc"
-install -Dm0755 "${CWD}/doinst.sh" "${PKG}/install/doinst.sh"
+mkdir -pv "${PKG}/usr/doc/${PRGNAM}-${VERSION}"
+mkdir -pv "${PKG}/install"
+install -Dv -m 0644 "${CWD}/${PRGNAM}.SlackBuild" "${PKG}/usr/doc/${PRGNAM}-${VERSION}/${PRGNAM}.SlackBuild"
+install -Dv -m 0644 "${CWD}/slack-desc" "${PKG}/install/slack-desc"
+install -Dv -m 0755 "${CWD}/doinst.sh" "${PKG}/install/doinst.sh"
 
 # Make the package; be sure to leave it in $OUTPUT
 # If package symlinks need to be created during install *before*
