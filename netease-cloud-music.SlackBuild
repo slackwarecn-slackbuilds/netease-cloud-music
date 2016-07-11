@@ -75,7 +75,8 @@ case $ARCH in
     )
     ;;
   *)
-    echo "Unsupport arch \"${ARCH}\""
+    echo "Error: Unsupport arch \"${ARCH}\"" >&2
+    exit 1
     ;;
 esac
 
