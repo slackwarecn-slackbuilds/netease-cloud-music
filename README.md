@@ -8,12 +8,16 @@ See [netease-cloud-music.info](netease-cloud-music.info) for more info.
 
 ## DEPENDENCIES
 
-1. [gst-libav](https://slackbuilds.org/repository/14.2/multimedia/gst-libav/)
+1. alsa-lib (Offical support)
++ mozilla-nss (Offical support)
++ gst-plugins-base (Offical support)
++ gst-plugins-good (Offical support)
++ [gst-libav](https://slackbuilds.org/repository/14.2/multimedia/gst-libav/)
 + [gst-plugins-ugly](https://slackbuilds.org/repository/14.2/multimedia/gst-plugins-ugly/)
 + [libcue](https://slackbuilds.org/repository/14.2/libraries/libcue/)
 + [libxkbcommon](https://slackbuilds.org/repository/14.2/libraries/libxkbcommon/)
 + [qt5](https://slackbuilds.org/repository/14.2/libraries/qt5/)
-+ [kconfig](https://github.com/slackwarecn/kconfig.git) (not necessary but recommended)
++ [kconfig](https://github.com/slackwarecn/kconfig.git) (Not necessary but recommended)
 
 ## BUILD
 
