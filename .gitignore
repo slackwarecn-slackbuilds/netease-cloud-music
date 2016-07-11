@@ -4,7 +4,11 @@
 *.swp
 
 # tarball
-*.deb
 *.txz
 *.tgz
+
+# tmp
+*.deb
+*.tar.gz
+*.tar.xz
 
