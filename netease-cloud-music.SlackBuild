@@ -2,12 +2,12 @@
 
 # Slackware build script for netease-cloud-music
 
-# Copyright (c) 2016 Slackware CN Community
+# Copyright (c) 2016 nnnewb <weak_ptr>,
+#                    Arondight <shell_way@foxmail.com>,
+#                    a1ive
+#                    The Slackware Linux CN Community
 # All rights reserved.
 #
-# Authors:  nnnewb <weak_ptr>,
-#           Arondight <shell_way@foxmail.com>,
-#           a1ive (Gen Li, https://github.com/a1ive)
 #
 # Redistribution and use of this script, with or without modification, is
 # permitted provided that the following conditions are met:
@@ -162,10 +162,6 @@ install -Dv -m 0644 "${CWD}/${PRGNAM}.SlackBuild" "${PKG}/usr/doc/${PRGNAM}-${VE
 install -Dv -m 0644 "${CWD}/slack-desc" "${PKG}/install/slack-desc"
 install -Dv -m 0755 "${CWD}/doinst.sh" "${PKG}/install/doinst.sh"
 
-# Make the package; be sure to leave it in $OUTPUT
-# If package symlinks need to be created during install *before*
-# your custom contents of doinst.sh runs, then add the -p switch to
-# the makepkg command below -- see makepkg(8) for details
 cd $PKG
 /sbin/makepkg -l y -c n "${OUTPUT}/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-tgz}"
 
