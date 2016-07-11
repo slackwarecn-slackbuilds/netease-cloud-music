@@ -37,15 +37,11 @@ CWD=$(dirname $(readlink -f $0))
 TMP=${TMP:-/tmp/SBo}
 PKG="${TMP}/package-${PRGNAM}"
 OUTPUT=${OUTPUT:-/tmp}
-SOURCE=''
 SLACKVER_FILE='/etc/slackware-version'
 SLACKVER=$(sed -n 's/slackware \([0-9]\+\.[0-9]\+\)$/\1/ip' $SLACKVER_FILE)
-SHA256SUMS=(
-  '304543102811c52f77ad99219862368356e69d2d43748d94817a206791133c86'  #netease-cloud-music_1.0.0_amd64_ubuntu16.04.deb
-  '79c2108c11d59ace8321727bc1876ac5ba0f7090b0c3deb4cc4251510a13577d'  #netease-cloud-music_1.0.0_i386_ubuntu16.04.deb
-  'efb94f25a3ef36633d8ee19c0842959ea1a0802bd257f514088d850306280d9b'  # glib2-2.46.2-x86_64-2.txz
-  'f838e792769957fa99fb3cbf3a852669246a80ece1975abeca338c010e28dc6c'  # glib2-2.46.2-i586-2.txz
-)
+DOWNLOADS=( )
+SOURCES=( )
+SHA256SUMS=( )
 
 # Automatically determine the architecture we're building on:
 if [[ -z "$ARCH" ]]
@@ -59,48 +55,51 @@ fi
 
 case $ARCH in
   *86)
-    SOURCE_URL="http://s1.music.126.net/download/pc/netease-cloud-music_${VERSION}_i386_ubuntu16.04.deb"
-    GLIB2_URL='http://mirrors.slackware.com/slackware/slackware-14.2/slackware/l/glib2-2.46.2-i586-2.txz'
+    DOWNLOADS=(
+      "http://s1.music.126.net/download/pc/netease-cloud-music_${VERSION}_i386_ubuntu16.04.deb"
+      'http://mirrors.slackware.com/slackware/slackware-14.2/slackware/l/glib2-2.46.2-i586-2.txz'
+    )
+    SHA256SUMS=(
+      '79c2108c11d59ace8321727bc1876ac5ba0f7090b0c3deb4cc4251510a13577d'  # netease-cloud-music_1.0.0_i386_ubuntu16.04.deb
+      'f838e792769957fa99fb3cbf3a852669246a80ece1975abeca338c010e28dc6c'  # glib2-2.46.2-i586-2.txz
+    )
     ;;
   *64)
-    SOURCE_URL="http://s1.music.126.net/download/pc/netease-cloud-music_${VERSION}_amd64_ubuntu16.04.deb"
-    GLIB2_URL='http://mirrors.slackware.com/slackware/slackware64-14.2/slackware64/l/glib2-2.46.2-x86_64-2.txz'
+    DOWNLOADS=(
+      "http://s1.music.126.net/download/pc/netease-cloud-music_${VERSION}_amd64_ubuntu16.04.deb"
+      'http://mirrors.slackware.com/slackware/slackware64-14.2/slackware64/l/glib2-2.46.2-x86_64-2.txz'
+    )
+    SHA256SUMS=(
+      '304543102811c52f77ad99219862368356e69d2d43748d94817a206791133c86'  # netease-cloud-music_1.0.0_amd64_ubuntu16.04.deb
+      'efb94f25a3ef36633d8ee19c0842959ea1a0802bd257f514088d850306280d9b'  # glib2-2.46.2-x86_64-2.txz
+    )
     ;;
   *)
-    SOURCE_URL=''
-    GLIB2_URL=''
+    echo "Unsupport arch \"${ARCH}\""
     ;;
 esac
+
+SOURCES=(
+  $(basename ${DOWNLOADS[0]})
+  $(basename ${DOWNLOADS[1]})
+)
 
 if [[ 'true' == $(awk -v ver=$SLACKVER \
                 'BEGIN { print (ver > 14.1) ? "true" : "false" }') ]]
 then
-  GLIB2_URL=''
+  DOWNLOADS[1]=''
 fi
-
-SOURCE=$(basename $SOURCE_URL)
 
 if [[ 'yes' == $PREBUILD ]]
 then
-  test -n $SOURCE_URL
-  wget -N $SOURCE_URL
-  if echo $SOURCE_URL | grep -o 'amd64' >/dev/null 2>&1
-  then
-    test ${SHA256SUMS[0]} == $(sha256sum $SOURCE | awk '{print $1}')
-  else
-    test ${SHA256SUMS[1]} == $(sha256sum $SOURCE | awk '{print $1}')
-  fi
+  test -n ${DOWNLOADS[0]}
+  wget -N ${DOWNLOADS[0]}
+  test ${SHA256SUMS[0]} == $(sha256sum ${SOURCES[0]} | awk '{print $1}')
 
-  if [[ -n $GLIB2_URL ]]
+  if [[ -n ${DOWNLOADS[1]} ]]
   then
-    GLIB2=$(basename $GLIB2_URL)
-    wget -N $GLIB2_URL
-    if echo $GLIB2_URL | grep -o 'x86_64' >/dev/null 2>&1
-    then
-      test ${SHA256SUMS[2]} == $(sha256sum $GLIB2 | awk '{print $1}')
-    else
-      test ${SHA256SUMS[3]} == $(sha256sum $GLIB2 | awk '{print $1}')
-    fi
+    wget -N ${DOWNLOADS[1]}
+    test ${SHA256SUMS[1]} == $(sha256sum ${SOURCES[1]} | awk '{print $1}')
   fi
 fi
 
@@ -112,14 +111,12 @@ test -d "${PRGNAM}-${VERSION}" && rm -rvf "${PRGNAM}-${VERSION}" || :
 # tar -zxvf $CWD/$PRGNAM-$VERSION.tar.gz
 
 cd $PKG
-ar -xvf "${CWD}/${SOURCE}"
+ar -xvf "${CWD}/${SOURCES[0]}"
 tar -Jxvf data.tar.xz
 rm -vf control.tar.gz data.tar.xz debian-binary
 
-if [[ -n $GLIB2_URL ]]
+if [[ -n ${DOWNLOADS[1]} ]]
 then
-  CUSTOM_GLIB2=$(basename $GLIB2_URL)
-
   if [[ -r "${CWD}/${CUSTOM_GLIB2}" ]]
   then
     CUSTOM_GLIB2_DIR='custom_glib2'
@@ -132,7 +129,7 @@ then
     mkdir -pv $CUSTOM_GLIB2_DIR
     cd $CUSTOM_GLIB2_DIR
 
-    tar -Jxvf "$CWD/${CUSTOM_GLIB2}"
+    tar -Jxvf "$CWD/${SOURCES[1]}"
     if [[ $ARCH = "x86_64" ]]
     then
       install -Dv -m 0755 "./usr/lib64/${LIBGLIB}" "../${CLOUD_MUSIC_BUILD_LIBDIR}"
