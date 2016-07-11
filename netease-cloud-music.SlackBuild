@@ -116,40 +116,37 @@ ar -xvf "${CWD}/${SOURCES[0]}"
 tar -Jxvf data.tar.xz
 rm -vf control.tar.gz data.tar.xz debian-binary
 
-if [[ -n ${DOWNLOADS[1]} ]]
+if [[ -n ${DOWNLOADS[1]} && -r "${CWD}/${SOURCES[1]}" ]]
 then
-  if [[ -r "${CWD}/${CUSTOM_GLIB2}" ]]
+  CUSTOM_GLIB2_DIR='custom_glib2'
+  CLOUD_MUSIC_SH='./usr/lib/netease-cloud-music/cloud_music.sh'
+  LIBGLIB='libglib-2.0.so.0.4600.2'
+  LIBGOBJECT='libgobject-2.0.so.0.4600.2'
+  CLOUD_MUSIC_BUILD_LIBDIR='./usr/lib/netease-cloud-music'
+  CLOUD_MUSIC_BUILD_BIN='usr/bin/netease-cloud-music'
+
+  mkdir -pv $CUSTOM_GLIB2_DIR
+  cd $CUSTOM_GLIB2_DIR
+
+  tar -Jxvf "$CWD/${SOURCES[1]}"
+  if [[ $ARCH = "x86_64" ]]
   then
-    CUSTOM_GLIB2_DIR='custom_glib2'
-    CLOUD_MUSIC_SH='./usr/lib/netease-cloud-music/cloud_music.sh'
-    LIBGLIB='libglib-2.0.so.0.4600.2'
-    LIBGOBJECT='libgobject-2.0.so.0.4600.2'
-    CLOUD_MUSIC_BUILD_LIBDIR='./usr/lib/netease-cloud-music'
-    CLOUD_MUSIC_BUILD_BIN='usr/bin/netease-cloud-music'
-
-    mkdir -pv $CUSTOM_GLIB2_DIR
-    cd $CUSTOM_GLIB2_DIR
-
-    tar -Jxvf "$CWD/${SOURCES[1]}"
-    if [[ $ARCH = "x86_64" ]]
-    then
-      install -Dv -m 0755 "./usr/lib64/${LIBGLIB}" "../${CLOUD_MUSIC_BUILD_LIBDIR}"
-      install -Dv -m 0755 "./usr/lib64/${LIBGOBJECT}" "../${CLOUD_MUSIC_BUILD_LIBDIR}"
-    else
-      install -Dv -m 0755 "./usr/lib/${LIBGLIB}" "../${CLOUD_MUSIC_BUILD_LIBDIR}"
-      install -Dv -m 0755 "./usr/lib/${LIBGOBJECT}" "../${CLOUD_MUSIC_BUILD_LIBDIR}"
-    fi
-
-    cd ..
-    rm -rvf $CUSTOM_GLIB2_DIR
-
-    ( echo "#!/usr/bin/env bash"
-      echo "LD_PRELOAD=${LIBGLIB}:${LIBGOBJECT} /usr/lib/netease-cloud-music/netease-cloud-music"
-    ) >> $CLOUD_MUSIC_SH
-
-    chmod -v +x $CLOUD_MUSIC_SH
-    rm -vf $CLOUD_MUSIC_BUILD_BIN
+    install -Dv -m 0755 "./usr/lib64/${LIBGLIB}" "../${CLOUD_MUSIC_BUILD_LIBDIR}"
+    install -Dv -m 0755 "./usr/lib64/${LIBGOBJECT}" "../${CLOUD_MUSIC_BUILD_LIBDIR}"
+  else
+    install -Dv -m 0755 "./usr/lib/${LIBGLIB}" "../${CLOUD_MUSIC_BUILD_LIBDIR}"
+    install -Dv -m 0755 "./usr/lib/${LIBGOBJECT}" "../${CLOUD_MUSIC_BUILD_LIBDIR}"
   fi
+
+  cd ..
+  rm -rvf $CUSTOM_GLIB2_DIR
+
+  ( echo "#!/usr/bin/env bash"
+    echo "LD_PRELOAD=${LIBGLIB}:${LIBGOBJECT} /usr/lib/netease-cloud-music/netease-cloud-music"
+  ) >> $CLOUD_MUSIC_SH
+
+  chmod -v +x $CLOUD_MUSIC_SH
+  rm -vf $CLOUD_MUSIC_BUILD_BIN
 fi
 
 chmod -v +x usr/lib/netease-cloud-music/libcef.so
