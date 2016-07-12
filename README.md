@@ -2,7 +2,7 @@
 
 ## ABOUT
 
-This is [SlackBuild](http://docs.slackware.com/slackware:slackbuild_scripts) for [Netease Cloud Music](http://music.163.com/#/download).
+This is [SlackBuild](http://docs.slackware.com/slackware:slackbuild_scripts) for [NetEase Cloud Music](http://music.163.com/#/download).
 
 See [netease-cloud-music.info](netease-cloud-music.info) and [slack-desc](slack-desc) for more info.
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# Slackware build script for netease-cloud-music
-
+# Slackware build script for NetEase Cloud Music
+#
 # Copyright (c) 2016 nnnewb <weak_ptr>,
 #                    Arondight <shell_way@foxmail.com>,
 #                    a1ive,
@@ -41,7 +41,7 @@ SLACKVER_FILE='/etc/slackware-version'
 SLACKVER=$(sed -n 's/slackware \([0-9]\+\.[0-9]\+\)$/\1/ip' $SLACKVER_FILE)
 DOWNLOADS=( )
 SOURCES=( )
-SHA256SUMS=( )
+MD5SUMS=( )
 
 # Automatically determine the architecture we're building on:
 if [[ -z "$ARCH" ]]
@@ -59,9 +59,9 @@ case $ARCH in
       "http://s1.music.126.net/download/pc/netease-cloud-music_${VERSION}_i386_ubuntu16.04.deb"
       'http://mirrors.slackware.com/slackware/slackware-14.2/slackware/l/glib2-2.46.2-i586-2.txz'
     )
-    SHA256SUMS=(
-      '79c2108c11d59ace8321727bc1876ac5ba0f7090b0c3deb4cc4251510a13577d'  # netease-cloud-music_1.0.0_i386_ubuntu16.04.deb
-      'f838e792769957fa99fb3cbf3a852669246a80ece1975abeca338c010e28dc6c'  # glib2-2.46.2-i586-2.txz
+    MD5SUMS=(
+      'e60c10829b8372808460f5eba64a92cc'  # netease-cloud-music_1.0.0_i386_ubuntu16.04.deb
+      '958aff18278497acfc1513da1fd22924'  # glib2-2.46.2-i586-2.txz
     )
     ;;
   *64)
@@ -69,9 +69,9 @@ case $ARCH in
       "http://s1.music.126.net/download/pc/netease-cloud-music_${VERSION}_amd64_ubuntu16.04.deb"
       'http://mirrors.slackware.com/slackware/slackware64-14.2/slackware64/l/glib2-2.46.2-x86_64-2.txz'
     )
-    SHA256SUMS=(
-      '304543102811c52f77ad99219862368356e69d2d43748d94817a206791133c86'  # netease-cloud-music_1.0.0_amd64_ubuntu16.04.deb
-      'efb94f25a3ef36633d8ee19c0842959ea1a0802bd257f514088d850306280d9b'  # glib2-2.46.2-x86_64-2.txz
+    MD5SUMS=(
+      'c1430b695eff22294ab3b84205105cdf'  # netease-cloud-music_1.0.0_amd64_ubuntu16.04.deb
+      'c8da58a76e32b4e7497cc2634e18bcd7'  # glib2-2.46.2-x86_64-2.txz
     )
     ;;
   *)
@@ -95,13 +95,19 @@ if [[ 'yes' == $PREBUILD ]]
 then
   test -n ${DOWNLOADS[0]}
   wget -N ${DOWNLOADS[0]}
-  test ${SHA256SUMS[0]} == $(sha256sum ${SOURCES[0]} | awk '{print $1}')
 
   if [[ -n ${DOWNLOADS[1]} ]]
   then
     wget -N ${DOWNLOADS[1]}
-    test ${SHA256SUMS[1]} == $(sha256sum ${SOURCES[1]} | awk '{print $1}')
   fi
+fi
+
+test -r ${SOURCES[0]}
+test ${MD5SUMS[0]} == $(md5sum ${SOURCES[0]} | awk '{print $1}')
+if [[ -n ${DOWNLOADS[1]} ]]
+then
+  test -r ${SOURCES[1]}
+  test ${MD5SUMS[1]} == $(md5sum ${SOURCES[1]} | awk '{print $1}')
 fi
 
 test -d $PKG && rm -rvf $PKG || :
