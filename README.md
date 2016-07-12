@@ -6,18 +6,18 @@ This is [SlackBuild](http://docs.slackware.com/slackware:slackbuild_scripts) for
 
 See [netease-cloud-music.info](netease-cloud-music.info) and [slack-desc](slack-desc) for more info.
 
-## DEPENDENCIES
+## REQUIRES
 
 1. alsa-lib (Offical support)
-+ mozilla-nss (Offical support)
++ [gst-libav](https://slackbuilds.org/repository/14.2/multimedia/gst-libav/)
 + gst-plugins-base (Offical support)
 + gst-plugins-good (Offical support)
-+ [gst-libav](https://slackbuilds.org/repository/14.2/multimedia/gst-libav/)
 + [gst-plugins-ugly](https://slackbuilds.org/repository/14.2/multimedia/gst-plugins-ugly/)
++ [kconfig](https://github.com/slackwarecn/kconfig.git) (Not necessary but recommended)
 + [libcue](https://slackbuilds.org/repository/14.2/libraries/libcue/)
 + [libxkbcommon](https://slackbuilds.org/repository/14.2/libraries/libxkbcommon/)
++ mozilla-nss (Offical support)
 + [qt5](https://slackbuilds.org/repository/14.2/libraries/qt5/)
-+ [kconfig](https://github.com/slackwarecn/kconfig.git) (Not necessary but recommended)
 
 ## BUILD
 

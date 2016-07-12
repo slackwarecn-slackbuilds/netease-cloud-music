@@ -5,7 +5,7 @@ DOWNLOAD="http://s1.music.126.net/download/pc/netease-cloud-music_1.0.0_i386_ubu
 MD5SUM="e60c10829b8372808460f5eba64a92cc"
 DOWNLOAD_x86_64="http://s1.music.126.net/download/pc/netease-cloud-music_1.0.0_amd64_ubuntu16.04.deb"
 MD5SUM_x86_64="c1430b695eff22294ab3b84205105cdf"
-REQUIRES="alsa-lib mozilla-nss gst-plugins-base gst-plugins-good gst-libav gst-plugins-ugly libcue ibxkbcommon qt5 kconfig"
+REQUIRES="alsa-lib gst-libav gst-plugins-base gst-plugins-good gst-plugins-ugly kconfig libcue libxkbcommon mozilla-nss qt5"
 MAINTAINER="Arondight"
 EMAIL="shell_way@foxmail.com"
 
