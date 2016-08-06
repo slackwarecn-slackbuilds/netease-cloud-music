@@ -39,9 +39,6 @@ PKG="${TMP}/package-${PRGNAM}"
 OUTPUT=${OUTPUT:-/tmp}
 SLACKVER_FILE='/etc/slackware-version'
 SLACKVER=$(sed -n 's/slackware \([0-9]\+\.[0-9]\+\)$/\1/ip' $SLACKVER_FILE)
-DOWNLOADS=( )
-SOURCES=( )
-MD5SUMS=( )
 
 # Automatically determine the architecture we're building on:
 if [[ -z "$ARCH" ]]
@@ -53,115 +50,24 @@ then
   esac
 fi
 
-case $ARCH in
-  *86)
-    DOWNLOADS=(
-      "http://s1.music.126.net/download/pc/netease-cloud-music_${VERSION}_i386_ubuntu16.04.deb"
-      'http://mirrors.slackware.com/slackware/slackware-14.2/slackware/l/glib2-2.46.2-i586-2.txz'
-    )
-    MD5SUMS=(
-      'e60c10829b8372808460f5eba64a92cc'  # netease-cloud-music_1.0.0_i386_ubuntu16.04.deb
-      '958aff18278497acfc1513da1fd22924'  # glib2-2.46.2-i586-2.txz
-    )
-    ;;
-  *64)
-    DOWNLOADS=(
-      "http://s1.music.126.net/download/pc/netease-cloud-music_${VERSION}_amd64_ubuntu16.04.deb"
-      'http://mirrors.slackware.com/slackware/slackware64-14.2/slackware64/l/glib2-2.46.2-x86_64-2.txz'
-    )
-    MD5SUMS=(
-      'c1430b695eff22294ab3b84205105cdf'  # netease-cloud-music_1.0.0_amd64_ubuntu16.04.deb
-      'c8da58a76e32b4e7497cc2634e18bcd7'  # glib2-2.46.2-x86_64-2.txz
-    )
-    ;;
-  *)
-    echo "Error: Unsupport arch \"${ARCH}\"" >&2
-    exit 1
-    ;;
-esac
-
-SOURCES=(
-  $(basename ${DOWNLOADS[0]})
-  $(basename ${DOWNLOADS[1]})
-)
-
-if [[ 'true' == $(awk -v ver=$SLACKVER \
-                'BEGIN { print (ver > 14.1) ? "true" : "false" }') ]]
-then
-  DOWNLOADS[1]=''
-fi
-
-if [[ 'yes' == $PREBUILD ]]
-then
-  test -n ${DOWNLOADS[0]}
-  wget -N ${DOWNLOADS[0]}
-
-  if [[ -n ${DOWNLOADS[1]} ]]
-  then
-    wget -N ${DOWNLOADS[1]}
-  fi
-fi
-
-test -r ${SOURCES[0]}
-test ${MD5SUMS[0]} == $(md5sum ${SOURCES[0]} | awk '{print $1}')
-if [[ -n ${DOWNLOADS[1]} ]]
-then
-  test -r ${SOURCES[1]}
-  test ${MD5SUMS[1]} == $(md5sum ${SOURCES[1]} | awk '{print $1}')
-fi
-
 test -d $PKG && rm -rvf $PKG || :
 mkdir -pv $TMP $PKG $OUTPUT
 
 cd $TMP
 test -d "${PRGNAM}-${VERSION}" && rm -rvf "${PRGNAM}-${VERSION}" || :
-# tar -zxvf $CWD/$PRGNAM-$VERSION.tar.gz
 
 cd $PKG
-ar -xvf "${CWD}/${SOURCES[0]}"
+ar -xvf ${PRGNAM}_${VERSION}*.deb
 tar -Jxvf data.tar.xz
 rm -vf control.tar.gz data.tar.xz debian-binary
-
-if [[ -n ${DOWNLOADS[1]} && -r "${CWD}/${SOURCES[1]}" ]]
-then
-  CUSTOM_GLIB2_DIR='custom_glib2'
-  CLOUD_MUSIC_SH='./usr/lib/netease-cloud-music/cloud_music.sh'
-  LIBGLIB='libglib-2.0.so.0.4600.2'
-  LIBGOBJECT='libgobject-2.0.so.0.4600.2'
-  CLOUD_MUSIC_BUILD_LIBDIR='./usr/lib/netease-cloud-music'
-  CLOUD_MUSIC_BUILD_BIN='usr/bin/netease-cloud-music'
-
-  mkdir -pv $CUSTOM_GLIB2_DIR
-  cd $CUSTOM_GLIB2_DIR
-
-  tar -Jxvf "$CWD/${SOURCES[1]}"
-  if [[ $ARCH = "x86_64" ]]
-  then
-    install -Dv -m 0755 "./usr/lib64/${LIBGLIB}" "../${CLOUD_MUSIC_BUILD_LIBDIR}"
-    install -Dv -m 0755 "./usr/lib64/${LIBGOBJECT}" "../${CLOUD_MUSIC_BUILD_LIBDIR}"
-  else
-    install -Dv -m 0755 "./usr/lib/${LIBGLIB}" "../${CLOUD_MUSIC_BUILD_LIBDIR}"
-    install -Dv -m 0755 "./usr/lib/${LIBGOBJECT}" "../${CLOUD_MUSIC_BUILD_LIBDIR}"
-  fi
-
-  cd ..
-  rm -rvf $CUSTOM_GLIB2_DIR
-
-  ( echo "#!/usr/bin/env bash"
-    echo "LD_PRELOAD=${LIBGLIB}:${LIBGOBJECT} /usr/lib/netease-cloud-music/netease-cloud-music"
-  ) >> $CLOUD_MUSIC_SH
-
-  chmod -v +x $CLOUD_MUSIC_SH
-  rm -vf $CLOUD_MUSIC_BUILD_BIN
-fi
 
 chmod -v +x usr/lib/netease-cloud-music/libcef.so
 
 mkdir -pv "${PKG}/usr/doc/${PRGNAM}-${VERSION}"
 mkdir -pv "${PKG}/install"
-install -Dv -m 0644 "${CWD}/${PRGNAM}.SlackBuild" "${PKG}/usr/doc/${PRGNAM}-${VERSION}/${PRGNAM}.SlackBuild"
-install -Dv -m 0644 "${CWD}/slack-desc" "${PKG}/install/slack-desc"
-install -Dv -m 0755 "${CWD}/doinst.sh" "${PKG}/install/doinst.sh"
+install -Dv -m0644 "${CWD}/${PRGNAM}.SlackBuild" "${PKG}/usr/doc/${PRGNAM}-${VERSION}/${PRGNAM}.SlackBuild"
+install -Dv -m0644 "${CWD}/slack-desc" "${PKG}/install/slack-desc"
+install -Dv -m0755 "${CWD}/doinst.sh" "${PKG}/install/doinst.sh"
 
 cd $PKG
 /sbin/makepkg -l y -c n "${OUTPUT}/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-tgz}"

@@ -13,7 +13,7 @@ See [netease-cloud-music.info](netease-cloud-music.info) and [slack-desc](slack-
 + gst-plugins-base (Offical support)
 + gst-plugins-good (Offical support)
 + [gst-plugins-ugly](https://slackbuilds.org/repository/14.2/multimedia/gst-plugins-ugly/)
-+ [kconfig](https://github.com/slackwarecn/kconfig.git) (Not necessary but recommended)
++ [kconfig](https://github.com/slackwarecn-slackbuilds/kconfig.git) (Not necessary but recommended)
 + [libcue](https://slackbuilds.org/repository/14.2/libraries/libcue/)
 + [libxkbcommon](https://slackbuilds.org/repository/14.2/libraries/libxkbcommon/)
 + mozilla-nss (Offical support)
@@ -22,7 +22,11 @@ See [netease-cloud-music.info](netease-cloud-music.info) and [slack-desc](slack-
 ## BUILD
 
 ```
-git clone https://github.com/slackwarecn/netease-cloud-music.git
+git clone https://github.com/slackwarecn-slackbuilds/netease-cloud-music.git
 cd netease-cloud-music
-PREBUILD=yes ./netease-cloud-music.SlackBuild
+source netease-cloud-music.info
+wget $DOWNLOAD          # For x86
+wget $DOWNLOAD_x86_64   # For x86_64
+./netease-cloud-music.SlackBuild
 ```
+
