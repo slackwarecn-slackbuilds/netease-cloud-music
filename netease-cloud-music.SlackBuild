@@ -57,7 +57,7 @@ cd $TMP
 test -d "${PRGNAM}-${VERSION}" && rm -rvf "${PRGNAM}-${VERSION}" || :
 
 cd $PKG
-ar -xvf ${PRGNAM}_${VERSION}*.deb
+ar -xvf ${CWD}/${PRGNAM}_${VERSION}*.deb
 tar -Jxvf data.tar.xz
 rm -vf control.tar.gz data.tar.xz debian-binary
 
