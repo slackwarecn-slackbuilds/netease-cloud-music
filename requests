@@ -1,0 +1,157 @@
+(+) need to update
+(*) not in official library
+- 未整理版（按照官方 deb 的依赖顺序，整理版在后面）
+Package		| package in Debain/Ubuntu  | file need installing
+alsa-lib	| libasound2				| libasound.so.2
+atk			| libatk1.0-0				| libatk-1.0.so.0 glibc		| libc6						| libc.so.6
+cairo		| libcairo2					| libcairo.so.2 (+) ???
+libdbus ???(均未发现有关软件包)
+expat		| libexpat1					| libexpat.so.1
+fontconfig  | libfontconfig1			| libfontconfig.so.1
+freetype	| libfreetype6				| libfreetype.so.6
+gcc			| libgcc1					| libgcc_s.so.1
+gdk-pixbuf  | libgdk-pixbuf2.0-0		| Libgdk_pixbuf-2.0.so.0
+glib2		| libglib2.0-0				| Libglib-2.0.so.0
+gtk2(可能还包含相关包)
+			| libgtk2.0-0				| ****
+nspr		| libnspr4					| libnspr4.so (这个库与其它系统情况不同，详情如下)
+{% codeblock %}
+bash-4.3# find /var/log/packages/ -exec grep libnspr4.so {} \; -exec echo {} \;
+grep: /var/log/packages/: Is a directory
+usr/lib64/libnspr4.so
+/var/log/packages/mozilla-nss-3.23-x86_64-1
+usr/lib/seamonkey-2.46/libnspr4.so
+/var/log/packages/seamonkey-solibs-compat32-2.46-x86_64-3_slack14.2compat32
+usr/lib64/firefox-52.2.0/libnspr4.so
+/var/log/packages/mozilla-firefox-52.2.0esr-x86_64-1_slack14.2
+usr/lib64/thunderbird-52.2.1/libnspr4.so
+/var/log/packages/mozilla-thunderbird-52.2.1-x86_64-1_slack14.2
+usr/lib64/seamonkey-2.48/libnspr4.so
+/var/log/packages/seamonkey-2.48-x86_64-1_slack14.2
+usr/lib64/seamonkey-2.48/libnspr4.so
+/var/log/packages/seamonkey-solibs-2.48-x86_64-1_slack14.2
+{% endcodeblock %}
+
+nss3		| libnss3					| libnss3.so(情况同上)
+{% codeblock %}
+usr/lib64/libnss3.so
+/var/log/packages/mozilla-nss-3.23-x86_64-1
+usr/lib/seamonkey-2.46/libnss3.so
+/var/log/packages/seamonkey-solibs-compat32-2.46-x86_64-3_slack14.2compat32
+usr/lib64/firefox-52.2.0/libnss3.so
+/var/log/packages/mozilla-firefox-52.2.0esr-x86_64-1_slack14.2
+usr/lib64/thunderbird-52.2.1/libnss3.so
+/var/log/packages/mozilla-thunderbird-52.2.1-x86_64-1_slack14.2
+usr/lib64/seamonkey-2.48/libnss3.so
+/var/log/packages/seamonkey-2.48-x86_64-1_slack14.2
+usr/lib64/seamonkey-2.48/libnss3.so
+/var/log/packages/seamonkey-solibs-2.48-x86_64-1_slack14.2
+{% endcodeblock %]
+
+pango		| libpango-1.0-0			| libpango-1.0.so.0
+pango		| libpangocairo-1.0-0		| libpangocairo-1.0.so.0
+qtbase, qtcore 包含在 qt 包里
+qt5-qtbase  | libqt5core5a				| libQt5Core.so.5 (*)
+qt5-qtbase	| eibqt5dbus5        		| libQt5DBus.so.5 (*)
+qt5-qtbase-gui | libqt5gui5				| *** (*)
+qt5-qtmultimedia | libqt5multimedia5	| libQt5Multimedia.so.5 (*)
+qt5-qtbase	| libqt5network5			| libQt5Network.so.5 (*)
+qt5-qtbase-gui | libqt5widgets5			| Libqt5widgets.so.5 (*)
+qt5-qtx11extras | libqt5x11extras5		| libQt5X11Extras.so.5 (*)
+qt-qtbase	| libqt5xml5				| libqt5xml.so.5 (*)
+libstdc++  | libstdc++6				| libstdc++.so.6
+{% codeblock %}
+bash-4.3# find /var/log/packages/ -exec grep libstdc++.so.6 {} \; -exec echo {} \;
+grep: /var/log/packages/: Is a directory
+usr/lib64/libstdc++.so.6.0.21
+/var/log/packages/aaa_elflibs-14.2-x86_64-23
+usr/lib/libstdc++.so.6.0.21
+/var/log/packages/aaa_elflibs-compat32-14.2-x86_64-23compat32
+usr/lib/libstdc++.so.6.0.21
+usr/lib64/libstdc++.so.6.0.21
+/var/log/packages/gcc-g++-5.3.0_multilib-x86_64-3alien
+{% endcodeblock %}
+libX11		| libx11-6					| libX11.so.6
+libXcursor	| libxcursor1				| libXcursor.so.1
+libXcursor  | libxext6					| libXext.so.6
+libXfixes	| libxfixes3				| libXfixes.so.3
+zlib		| libz1g					| libz.so.1
+gst-plugins-good | gstreamer1.0-plugins-good | ***
+gst-plugins-bad  |  gstreamer1.0-plugins-bad | ***	(*)
+gst-plugins-ugly |  gstreamer1.0-plugins-ugly| ***  (*)
+(虽然没看到要求，最好加上gst-plugins-base，目测有依赖关系)
+
+- 整理后
+
+1.安装 qt5 后以下依赖即可覆盖
+qt5-qtbase  | libqt5core5a				| libQt5Core.so.5 (*)
+qt5-qtbase	| eibqt5dbus5        		| libQt5DBus.so.5 (*)
+qt5-qtbase-gui | libqt5gui5				| *** (*)
+qt5-qtmultimedia | libqt5multimedia5	| libQt5Multimedia.so.5 (*)
+qt5-qtbase	| libqt5network5			| libQt5Network.so.5 (*)
+qt5-qtbase-gui | libqt5widgets5			| Libqt5widgets.so.5 (*)
+qt5-qtx11extras | libqt5x11extras5		| libQt5X11Extras.so.5 (*)
+qt-qtbase	| libqt5xml5				| libqt5xml.so.5 (*)
+
+2.直接搜索安装
+gst-plugins-bad  |  gstreamer1.0-plugins-bad | ***	(*)
+gst-plugins-ugly |  gstreamer1.0-plugins-ugly| ***  (*)
+
+3.官方包
+libX11		| libx11-6					| libX11.so.6
+libXcursor	| libxcursor1				| libXcursor.so.1
+libXcursor  | libxext6					| libXext.so.6
+libXfixes	| libxfixes3				| libXfixes.so.3
+zlib		| libz1g					| libz.so.1
+gst-plugins-good | gstreamer1.0-plugins-good | ***
+alsa-lib	| libasound2				| libasound.so.2
+atk			| libatk1.0-0				| libatk-1.0.so.0 glibc		| libc6						| libc.so.6
+cairo		| libcairo2					| libcairo.so.2 (+) //官方包的版本是不符合要求的，但是程序 OK，并未出问题就没有进行升级
+expat		| libexpat1					| libexpat.so.1
+fontconfig  | libfontconfig1			| libfontconfig.so.1
+freetype	| libfreetype6				| libfreetype.so.6
+gcc			| libgcc1					| libgcc_s.so.1
+gdk-pixbuf  | libgdk-pixbuf2.0-0		| Libgdk_pixbuf-2.0.so.0
+glib2		| libglib2.0-0				| Libglib-2.0.so.0
+pango		| libpango-1.0-0			| libpango-1.0.so.0
+pango		| libpangocairo-1.0-0		| libpangocairo-1.0.so.0
+
+4.特殊包
+libdbus ???(均未发现有关软件包)
+gtk2(可能还包含相关包)
+			| libgtk2.0-0				| ****
+nspr		| libnspr4					| libnspr4.so (这个库与其它系统情况不同，详情如下)
+
+下面这两个软件包并没有特定的包，而是从了浏览器，作为附属包。安装火狐就会自动安装，如果不需要请直接安装对应官方包 mozilla-ns
+{% codeblock %}
+bash-4.3# find /var/log/packages/ -exec grep libnspr4.so {} \; -exec echo {} \;
+grep: /var/log/packages/: Is a directory
+usr/lib64/libnspr4.so
+/var/log/packages/mozilla-nss-3.23-x86_64-1
+usr/lib/seamonkey-2.46/libnspr4.so
+/var/log/packages/seamonkey-solibs-compat32-2.46-x86_64-3_slack14.2compat32
+usr/lib64/firefox-52.2.0/libnspr4.so
+/var/log/packages/mozilla-firefox-52.2.0esr-x86_64-1_slack14.2
+usr/lib64/thunderbird-52.2.1/libnspr4.so
+/var/log/packages/mozilla-thunderbird-52.2.1-x86_64-1_slack14.2
+usr/lib64/seamonkey-2.48/libnspr4.so
+/var/log/packages/seamonkey-2.48-x86_64-1_slack14.2
+usr/lib64/seamonkey-2.48/libnspr4.so
+/var/log/packages/seamonkey-solibs-2.48-x86_64-1_slack14.2
+{% endcodeblock %}
+
+nss3		| libnss3					| libnss3.so(情况同上)
+{% codeblock %}
+usr/lib64/libnss3.so
+/var/log/packages/mozilla-nss-3.23-x86_64-1
+usr/lib/seamonkey-2.46/libnss3.so
+/var/log/packages/seamonkey-solibs-compat32-2.46-x86_64-3_slack14.2compat32
+usr/lib64/firefox-52.2.0/libnss3.so
+/var/log/packages/mozilla-firefox-52.2.0esr-x86_64-1_slack14.2
+usr/lib64/thunderbird-52.2.1/libnss3.so
+/var/log/packages/mozilla-thunderbird-52.2.1-x86_64-1_slack14.2
+usr/lib64/seamonkey-2.48/libnss3.so
+/var/log/packages/seamonkey-2.48-x86_64-1_slack14.2
+usr/lib64/seamonkey-2.48/libnss3.so
+/var/log/packages/seamonkey-solibs-2.48-x86_64-1_slack14.2
+{% endcodeblock %]
